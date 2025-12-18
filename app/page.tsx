@@ -91,7 +91,7 @@ export default function Home() {
                 <span className="text-sm font-black italic">A</span>
               </div>
               <div>
-                <h1 className="text-lg font-black tracking-tighter uppercase italic">
+                <h1 className="text-lg font-black tracking-tighter uppercase italic text-white">
                   AndMarks
                 </h1>
                 <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-none">
@@ -109,45 +109,44 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="relative mx-auto max-w-7xl px-6 py-12">
-        <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div className="space-y-4">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter max-w-3xl leading-[0.9]">
-              THE EVOLUTION OF <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">INTELLIGENCE</span>.
+      <main className="relative mx-auto max-w-7xl px-6 py-8">
+        <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tighter max-w-3xl leading-none text-white">
+              THE EVOLUTION OF <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 uppercase">INTELLIGENCE</span>.
             </h2>
-            <p className="text-lg text-zinc-400 max-w-xl font-medium">
-              Real-time, verified benchmarks for the frontier models defining the next era of compute.
+            <p className="text-base text-zinc-400 max-w-xl font-medium">
+              Real-time, verified benchmarks for frontier models.
             </p>
           </div>
           
-          {/* View Toggle */}
-          <div className="flex p-1 bg-white/5 border border-white/10 rounded-xl h-fit">
+          <div className="flex p-1 bg-white/5 border border-white/10 rounded-xl h-fit shadow-xl backdrop-blur-md">
             <button 
               onClick={() => setViewMode('table')}
-              className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'table' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'table' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
             >
-              Table
+              List
             </button>
             <button 
               onClick={() => setViewMode('chart')}
-              className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'chart' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'chart' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
             >
-              Chart
+              Graph
             </button>
           </div>
         </div>
 
-        <div className="mb-10 inline-flex p-1 bg-white/5 border border-white/10 rounded-2xl overflow-x-auto max-w-full no-scrollbar">
+        <div className="mb-8 inline-flex p-1 bg-white/5 border border-white/10 rounded-xl overflow-x-auto max-w-full no-scrollbar backdrop-blur-md">
           {data.map((category) => (
             <button
               key={category.id}
               onClick={() => setActiveTab(category.id)}
               className={`
-                whitespace-nowrap px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300
+                whitespace-nowrap px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300
                 ${
                   activeTab === category.id
-                    ? 'bg-white text-black shadow-[0_10px_20px_rgba(255,255,255,0.1)]'
-                    : 'text-zinc-500 hover:text-white'
+                    ? 'bg-white text-black shadow-[0_5px_20px_rgba(255,255,255,0.1)] scale-[1.01]'
+                    : 'text-zinc-500 hover:text-white hover:bg-white/5'
                 }
               `}
             >
@@ -156,38 +155,48 @@ export default function Home() {
           ))}
         </div>
 
-        <div key={activeTab + viewMode} className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="mb-8 grid grid-cols-1 lg:grid-cols-3 gap-8 items-end">
+        <div key={activeTab + viewMode} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <div className="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-6 items-end">
             <div className="lg:col-span-2">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="h-px w-8 bg-blue-500" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Metadata Analysis</span>
+              <div className="flex items-center gap-3 mb-1.5">
+                <span className="h-px w-6 bg-blue-500" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Analysis</span>
               </div>
-              <h3 className="text-3xl font-black tracking-tight">{activeCategory.name}</h3>
-              <p className="mt-3 text-zinc-400 text-lg max-w-2xl leading-relaxed">
+              <h3 className="text-2xl font-black tracking-tight text-white">{activeCategory.name}</h3>
+              <p className="mt-2 text-zinc-400 text-sm max-w-2xl leading-relaxed">
                 {activeCategory.description}
               </p>
+            </div>
+            <div className="flex lg:justify-end gap-10">
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">Entities</p>
+                <p className="text-xl font-black tabular-nums text-white">{activeCategory.models.length}</p>
+              </div>
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">Sync</p>
+                <p className="text-xl font-black tabular-nums text-white tracking-tighter">V4.5</p>
+              </div>
             </div>
           </div>
 
           {viewMode === 'table' ? (
-            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl">
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-3xl shadow-xl">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="border-b border-white/5 bg-white/[0.01]">
-                      <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Rank</th>
-                      <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Model Entity</th>
-                      <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Origin</th>
-                      <th className="px-8 py-6 text-right text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Intelligence Delta</th>
+                      <th className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Rank</th>
+                      <th className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Model Entity</th>
+                      <th className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Origin</th>
+                      <th className="px-8 py-4 text-right text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Delta</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {activeCategory.models.map((model, index) => (
                       <tr key={model.name} className="group hover:bg-white/[0.03] transition-all duration-300">
-                        <td className="px-8 py-6">
-                          <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-black transition-all group-hover:scale-110 ${
-                            index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-black shadow-[0_0_20px_rgba(251,191,36,0.4)]' :
+                        <td className="px-6 py-3">
+                          <div className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-black transition-all group-hover:scale-105 ${
+                            index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-black shadow-[0_0_15px_rgba(251,191,36,0.3)]' :
                             index === 1 ? 'bg-zinc-200 text-black' :
                             index === 2 ? 'bg-orange-800 text-white' :
                             'bg-white/5 text-zinc-500 group-hover:bg-white/10'
@@ -195,19 +204,19 @@ export default function Home() {
                             {model.rank || index + 1}
                           </div>
                         </td>
-                        <td className="px-8 py-6">
-                          <div className="font-black text-lg tracking-tight group-hover:translate-x-1 transition-transform">
+                        <td className="px-6 py-3">
+                          <div className="font-bold text-sm tracking-tight group-hover:translate-x-1 transition-transform text-white">
                             {model.name}
                           </div>
                         </td>
-                        <td className="px-8 py-6">
+                        <td className="px-6 py-3">
                           <ProviderBadge provider={model.provider} />
                         </td>
-                        <td className="px-8 py-6 text-right">
-                          <div className="flex flex-col items-end gap-2">
-                            <span className="text-xl font-black tabular-nums tracking-tighter">
+                        <td className="px-8 py-3 text-right">
+                          <div className="flex flex-col items-end">
+                            <span className="text-base font-black tabular-nums tracking-tighter text-white">
                               {model.score.toLocaleString()}
-                              <span className="ml-1 text-[10px] text-zinc-500 uppercase tracking-widest">{model.unit || ' Elo'}</span>
+                              <span className="ml-1 text-[9px] text-zinc-500 uppercase tracking-widest font-bold">{model.unit || ' Elo'}</span>
                             </span>
                           </div>
                         </td>
@@ -218,53 +227,86 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <ChartSection 
-                title="Intelligence Index" 
-                subtitle="Artificial Analysis; Higher is better" 
-                models={activeCategory.models} 
-                dataKey="score"
-                color="bg-blue-500"
-              />
-              <ChartSection 
-                title="Speed Index" 
-                subtitle="Tokens per Second; Higher is better" 
-                models={activeCategory.models.filter(m => m.secondaryScore)} 
-                dataKey="secondaryScore"
-                color="bg-emerald-500"
-              />
-              <ChartSection 
-                title="Price Efficiency" 
-                subtitle="USD per 1M Tokens; Lower is better" 
-                models={activeCategory.models.filter(m => m.tertiaryScore)} 
-                dataKey="tertiaryScore"
-                color="bg-orange-500"
-                inverse
-              />
+            <div className="space-y-8">
+              <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 md:p-12 backdrop-blur-3xl shadow-xl">
+                <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div>
+                    <h4 className="text-xl font-black uppercase tracking-tight text-white italic leading-none">Intelligence Matrix</h4>
+                    <p className="text-[9px] text-blue-500 font-black uppercase tracking-[0.3em] mt-1.5">Distribution Visualization</p>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <ProviderLegend color="bg-emerald-500" label="OpenAI" />
+                    <ProviderLegend color="bg-amber-500" label="Anthropic" />
+                    <ProviderLegend color="bg-blue-500" label="Google" />
+                    <ProviderLegend color="bg-zinc-400" label="xAI" />
+                  </div>
+                </div>
+                
+                <div className="flex items-end gap-1.5 md:gap-2.5 h-[250px] md:h-[320px] border-b border-white/5 pb-1 px-2">
+                  {activeCategory.models.map((model, i) => {
+                    const maxVal = Math.max(...activeCategory.models.map(m => m.score));
+                    const percentage = (model.score / maxVal) * 100;
+                    return (
+                      <div key={model.name} className="flex-1 flex flex-col items-center group relative h-full justify-end cursor-pointer">
+                        <div className="absolute bottom-full mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100 whitespace-nowrap z-20">
+                          <div className="bg-white text-black px-2.5 py-1.5 rounded-xl shadow-2xl flex flex-col items-center gap-0.5">
+                            <span className="text-[8px] font-black uppercase tracking-widest opacity-50">{model.name}</span>
+                            <span className="text-xs font-black">{model.score.toLocaleString()}{model.unit || ' Elo'}</span>
+                          </div>
+                          <div className="w-1.5 h-1.5 bg-white rotate-45 mx-auto -mt-0.5" />
+                        </div>
+
+                        <div 
+                          className={`w-full max-w-[45px] rounded-t-lg transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] relative overflow-hidden group-hover:brightness-110
+                            ${model.provider === 'OpenAI' ? 'bg-gradient-to-t from-emerald-600/80 to-emerald-400/80' :
+                              model.provider === 'Anthropic' ? 'bg-gradient-to-t from-amber-600/80 to-amber-400/80' :
+                              model.provider === 'Google' ? 'bg-gradient-to-t from-blue-600/80 to-blue-400/80' :
+                              'bg-gradient-to-t from-zinc-500/80 to-zinc-200/80'}`}
+                          style={{ 
+                            height: `${Math.max(percentage, 4)}%`,
+                            transitionDelay: `${i * 30}ms`
+                          }}
+                        >
+                          <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+
+                        <div className="absolute top-[calc(100%+8px)] flex flex-col items-center">
+                          <div className={`h-1.5 w-1.5 rounded-full mb-1 ${
+                            model.provider === 'OpenAI' ? 'bg-emerald-500' :
+                            model.provider === 'Anthropic' ? 'bg-amber-500' :
+                            model.provider === 'Google' ? 'bg-blue-500' : 'bg-white'
+                          }`} />
+                          <span className="text-[8px] font-black text-zinc-600 group-hover:text-zinc-400 transition-colors">#{i+1}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           )}
         </div>
       </main>
 
-      <footer className="mt-20 border-t border-white/5 bg-black/40 backdrop-blur-xl py-16">
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="space-y-6">
+      <footer className="mt-12 border-t border-white/5 bg-black/40 backdrop-blur-xl py-10">
+        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 md:grid-cols-2 gap-8 text-white">
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="h-6 w-6 bg-white text-black rounded flex items-center justify-center font-black italic text-xs">A</div>
-              <h4 className="text-sm font-black uppercase tracking-tighter italic">AndMarks</h4>
+              <div className="h-5 w-5 bg-white text-black rounded flex items-center justify-center font-black italic text-[10px] shadow-lg">A</div>
+              <h4 className="text-xs font-black uppercase tracking-tighter italic">AndMarks</h4>
             </div>
-            <p className="text-sm text-zinc-500 max-w-xs leading-relaxed">
-              Tracking the frontier of neural evolution. Verified data points for the models building the future.
+            <p className="text-xs text-zinc-500 max-w-xs leading-relaxed font-medium">
+              Tracking the frontier of neural evolution.
             </p>
           </div>
-          <div className="flex flex-col md:items-end justify-between py-2">
-            <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+          <div className="flex flex-col md:items-end justify-between py-1">
+            <div className="flex gap-6 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
               <span className="hover:text-white cursor-pointer transition-colors">Nodes</span>
               <span className="hover:text-white cursor-pointer transition-colors">Protocol</span>
               <span className="hover:text-white cursor-pointer transition-colors">Latency</span>
             </div>
-            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-8">
-              © 2025 AndMarks Engineering. All rights reserved.
+            <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mt-6">
+              © 2025 AndMarks Engineering.
             </p>
           </div>
         </div>
@@ -273,58 +315,11 @@ export default function Home() {
   );
 }
 
-function ChartSection({ title, subtitle, models, dataKey, color, inverse }: { 
-  title: string, 
-  subtitle: string, 
-  models: BenchmarkModel[], 
-  dataKey: keyof BenchmarkModel, 
-  color: string,
-  inverse?: boolean
-}) {
-  const maxVal = Math.max(...models.map(m => Number(m[dataKey]) || 0));
-  
+function ProviderLegend({ color, label }: { color: string, label: string }) {
   return (
-    <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 backdrop-blur-xl flex flex-col h-full shadow-xl">
-      <div className="mb-8">
-        <h4 className="text-xs font-black uppercase tracking-widest text-zinc-100">{title}</h4>
-        <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">{subtitle}</p>
-      </div>
-      
-      <div className="flex-1 flex items-end gap-2 h-[200px] mb-6">
-        {models.map((model, i) => {
-          const val = Number(model[dataKey]) || 0;
-          const height = (val / maxVal) * 100;
-          return (
-            <div key={model.name} className="flex-1 flex flex-col items-center group relative h-full justify-end">
-              <div className="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                <div className="bg-white text-black text-[10px] font-black px-2 py-1 rounded shadow-lg">
-                  {val.toLocaleString()}
-                </div>
-              </div>
-              <div 
-                className={`w-full rounded-t-sm transition-all duration-700 ease-out ${color} ${inverse ? 'opacity-60 hover:opacity-100' : 'opacity-80 hover:opacity-100'}`}
-                style={{ height: `${height}%`, animationDelay: `${i * 0.1}s` }}
-              />
-              <div className="mt-4 flex flex-col items-center">
-                <div className={`h-1.5 w-1.5 rounded-full ${
-                  model.provider === 'OpenAI' ? 'bg-emerald-500' :
-                  model.provider === 'Anthropic' ? 'bg-amber-500' :
-                  model.provider === 'Google' ? 'bg-blue-500' : 'bg-white'
-                }`} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      <div className="space-y-2">
-        {models.map((model) => (
-          <div key={model.name} className="flex items-center justify-between text-[10px] font-bold">
-            <span className="text-zinc-400 truncate max-w-[120px]">{model.name}</span>
-            <span className="text-zinc-100 tabular-nums">{Number(model[dataKey]).toLocaleString()}</span>
-          </div>
-        ))}
-      </div>
+    <div className="flex items-center gap-2">
+      <div className={`h-1.5 w-1.5 rounded-full ${color}`} />
+      <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{label}</span>
     </div>
   );
 }
