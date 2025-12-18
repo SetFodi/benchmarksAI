@@ -15,9 +15,11 @@ AndMarks is a premium AI benchmark dashboard providing real-time and verified le
 ## Benchmarks Included
 
 1.  **Chatbot Arena (Elo)**: The definitive crowdsourced leaderboard based on human preference.
-2.  **Design2Code (UI)**: State-of-the-art evaluation for converting visual designs into frontend code.
-3.  **SWE-bench Verified**: Real-world software engineering issue resolution performance.
-4.  **Live Models**: Real-time context capabilities of the newest frontier releases.
+2.  **LiveCodeBench**: Holistic competitive programming and coding evaluation.
+3.  **GPQA (Science)**: Graduate-level reasoning across biology, physics, and chemistry.
+4.  **Design2Code (UI)**: State-of-the-art evaluation for converting visual designs into frontend code.
+5.  **SWE-bench Verified**: Real-world software engineering issue resolution performance.
+6.  **Model Context**: Real-time context capabilities of the newest frontier releases.
 
 ## Getting Started
 
