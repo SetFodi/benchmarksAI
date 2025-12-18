@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Benchmarks 2025 | Verified Model Leaderboards",
-  description: "Recent and verified benchmarks for top AI models from OpenAI, Anthropic, Google, and xAI.",
+  title: "AndMarks | Frontier AI Benchmarks",
+  description: "The premium destination for verified and live AI model leaderboards. Track the evolution of intelligence.",
 };
 
 export default function RootLayout({
@@ -23,9 +23,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
       </body>
