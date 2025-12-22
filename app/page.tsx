@@ -8,6 +8,11 @@ export default function Home() {
   const [data, setData] = useState<BenchmarkCategory[]>([]);
   const [activeTab, setActiveTab] = useState<string>('');
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProvider, setSelectedProvider] = useState<BenchmarkModel['provider'] | 'All'>('All');
+  const [sortConfig, setSortConfig] = useState<{ key: keyof BenchmarkModel; direction: 'asc' | 'desc' }>({ key: 'rank', direction: 'asc' });
+  const [comparingModels, setComparingModels] = useState<string[]>([]);
+  const [showInfo, setShowInfo] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +36,45 @@ export default function Home() {
   }, []);
 
   const activeCategory = data.find((cat) => cat.id === activeTab) || data[0];
+
+  const filteredModels = activeCategory?.models
+    .filter((model) => {
+      const matchesSearch = model.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesProvider = selectedProvider === 'All' || model.provider === selectedProvider;
+      return matchesSearch && matchesProvider;
+    })
+    .sort((a, b) => {
+      const valA = a[sortConfig.key];
+      const valB = b[sortConfig.key];
+      if (valA === undefined || valB === undefined) return 0;
+      if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    }) || [];
+
+  const handleSort = (key: keyof BenchmarkModel) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  };
+
+  const toggleComparison = (modelName: string) => {
+    setComparingModels(prev => 
+      prev.includes(modelName) 
+        ? prev.filter(m => m !== modelName) 
+        : prev.length < 2 ? [...prev, modelName] : [prev[1], modelName]
+    );
+  };
+
+  const comparisonData = data.flatMap(cat => cat.models).filter(m => comparingModels.includes(m.name));
+  // Deduplicate by name if same model appears in multiple categories
+  const uniqueComparisonModels = Array.from(new Map(comparisonData.map(m => [m.name, m])).values());
+
+  const providerCounts = activeCategory?.models.reduce((acc, m) => {
+    acc[m.provider] = (acc[m.provider] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>) || {};
 
   if (loading) {
     return (
@@ -137,19 +181,35 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="flex p-1 bg-white/5 border border-white/10 rounded-xl h-fit shadow-xl backdrop-blur-md">
-            <button 
-              onClick={() => setViewMode('table')}
-              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'table' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
-            >
-              List
-            </button>
-            <button 
-              onClick={() => setViewMode('chart')}
-              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'chart' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
-            >
-              Graph
-            </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <svg className="h-3.5 w-3.5 text-zinc-500 group-focus-within:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input 
+                type="text" 
+                placeholder="SEARCH ENTITIES..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-white/5 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-[10px] font-black uppercase tracking-widest text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all w-full sm:w-64 backdrop-blur-md"
+              />
+            </div>
+            <div className="flex p-1 bg-white/5 border border-white/10 rounded-xl h-fit shadow-xl backdrop-blur-md">
+              <button 
+                onClick={() => setViewMode('table')}
+                className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'table' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
+              >
+                List
+              </button>
+              <button 
+                onClick={() => setViewMode('chart')}
+                className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'chart' ? 'bg-white text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
+              >
+                Graph
+              </button>
+            </div>
           </div>
         </div>
 
@@ -173,18 +233,77 @@ export default function Home() {
         </div>
 
         <div key={activeTab + viewMode} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+          {uniqueComparisonModels.length === 2 && (
+            <div className="mb-10 p-6 rounded-3xl bg-blue-500/10 border border-blue-500/20 backdrop-blur-xl animate-in slide-in-from-top-4 duration-500">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Head-to-Head Comparison</h4>
+                </div>
+                <button 
+                  onClick={() => setComparingModels([])}
+                  className="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
+                >
+                  Clear Selection
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-12 relative">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-black italic text-white/5 pointer-events-none uppercase tracking-[1em]">VS</div>
+                {uniqueComparisonModels.map((model, i) => (
+                  <div key={model.name} className={`space-y-4 ${i === 1 ? 'text-right' : ''}`}>
+                    <div>
+                      <ProviderBadge provider={model.provider} />
+                      <h5 className="text-2xl font-black tracking-tighter text-white mt-2">{model.name}</h5>
+                    </div>
+                    <div className={`flex flex-col ${i === 1 ? 'items-end' : 'items-start'}`}>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-1">Intelligence Index</p>
+                      <p className="text-4xl font-black tabular-nums tracking-tighter text-white">
+                        {model.score.toLocaleString()}
+                        <span className="text-sm ml-1 text-zinc-500">{model.unit || 'Elo'}</span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-6 items-end">
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3 mb-1.5">
                 <span className="h-px w-6 bg-blue-500" />
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Analysis</span>
+                <button 
+                  onClick={() => setShowInfo(!showInfo)}
+                  className="p-1 rounded-full hover:bg-white/5 text-zinc-500 hover:text-white transition-all"
+                >
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
               </div>
               <h3 className="text-2xl font-black tracking-tight text-white">{activeCategory.name}</h3>
-              <p className="mt-2 text-zinc-400 text-sm max-w-2xl leading-relaxed">
-                {activeCategory.description}
-              </p>
+              {showInfo ? (
+                <div className="mt-3 p-4 rounded-xl bg-blue-500/5 border border-blue-500/20 animate-in fade-in zoom-in-95 duration-300">
+                  <p className="text-zinc-300 text-xs leading-relaxed italic">
+                    {activeCategory.description}
+                  </p>
+                </div>
+              ) : (
+                <p className="mt-2 text-zinc-400 text-sm max-w-2xl leading-relaxed">
+                  Tracking the highest-performing intelligence entities within this domain.
+                </p>
+              )}
             </div>
             <div className="flex lg:justify-end gap-10">
+              <div className="flex gap-4">
+                {Object.entries(providerCounts).map(([provider, count]) => (
+                  <div key={provider} className="text-center">
+                    <p className="text-[8px] font-black uppercase tracking-widest text-zinc-600 mb-0.5">{provider}</p>
+                    <p className="text-sm font-black text-white/80">{count}</p>
+                  </div>
+                ))}
+              </div>
               <div>
                 <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">Entities</p>
                 <p className="text-xl font-black tabular-nums text-white">{activeCategory.models.length}</p>
@@ -202,20 +321,58 @@ export default function Home() {
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="border-b border-white/5 bg-white/[0.01]">
-                      <th className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Rank</th>
-                      <th className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Model Entity</th>
+                      <th className="px-4 py-4 w-10"></th>
+                      <th 
+                        onClick={() => handleSort('rank')}
+                        className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors group"
+                      >
+                        <div className="flex items-center gap-1">
+                          Rank
+                          <SortIcon active={sortConfig.key === 'rank'} direction={sortConfig.direction} />
+                        </div>
+                      </th>
+                      <th 
+                        onClick={() => handleSort('name')}
+                        className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors group"
+                      >
+                        <div className="flex items-center gap-1">
+                          Model Entity
+                          <SortIcon active={sortConfig.key === 'name'} direction={sortConfig.direction} />
+                        </div>
+                      </th>
                       <th className="px-6 py-4 text-left text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Origin</th>
-                      <th className="px-8 py-4 text-right text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap">Delta</th>
+                      <th 
+                        onClick={() => handleSort('score')}
+                        className="px-8 py-4 text-right text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors group"
+                      >
+                        <div className="flex items-center justify-end gap-1">
+                          Delta
+                          <SortIcon active={sortConfig.key === 'score'} direction={sortConfig.direction} />
+                        </div>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {activeCategory.models.map((model, index) => (
-                      <tr key={model.name} className="group hover:bg-white/[0.03] transition-all duration-300">
+                    {filteredModels.map((model, index) => (
+                      <tr 
+                        key={model.name} 
+                        onClick={() => toggleComparison(model.name)}
+                        className={`group hover:bg-white/[0.03] transition-all duration-300 cursor-pointer ${comparingModels.includes(model.name) ? 'bg-blue-500/5' : ''}`}
+                      >
+                        <td className="px-4 py-3">
+                          <div className={`w-4 h-4 rounded border transition-all flex items-center justify-center ${comparingModels.includes(model.name) ? 'bg-blue-500 border-blue-500' : 'border-white/10 group-hover:border-white/30'}`}>
+                            {comparingModels.includes(model.name) && (
+                              <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-6 py-3">
                           <div className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-black transition-all group-hover:scale-105 ${
-                            index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-black shadow-[0_0_15px_rgba(251,191,36,0.3)]' :
-                            index === 1 ? 'bg-zinc-200 text-black' :
-                            index === 2 ? 'bg-orange-800 text-white' :
+                            model.rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-black shadow-[0_0_15px_rgba(251,191,36,0.3)]' :
+                            model.rank === 2 ? 'bg-zinc-200 text-black' :
+                            model.rank === 3 ? 'bg-orange-800 text-white' :
                             'bg-white/5 text-zinc-500 group-hover:bg-white/10'
                           }`}>
                             {model.rank || index + 1}
@@ -239,6 +396,13 @@ export default function Home() {
                         </td>
                       </tr>
                     ))}
+                    {filteredModels.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-20 text-center">
+                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">No matching intelligence nodes found.</p>
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -252,20 +416,40 @@ export default function Home() {
                     <p className="text-[9px] text-blue-500 font-black uppercase tracking-[0.3em] mt-1.5">Distribution Visualization</p>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    <ProviderLegend color="bg-emerald-500" label="OpenAI" />
-                    <ProviderLegend color="bg-amber-500" label="Anthropic" />
-                    <ProviderLegend color="bg-blue-500" label="Google" />
-                    <ProviderLegend color="bg-zinc-400" label="xAI" />
+                    <ProviderLegend 
+                      color="bg-emerald-500" 
+                      label="OpenAI" 
+                      active={selectedProvider === 'OpenAI'} 
+                      onClick={() => setSelectedProvider(selectedProvider === 'OpenAI' ? 'All' : 'OpenAI')}
+                    />
+                    <ProviderLegend 
+                      color="bg-amber-500" 
+                      label="Anthropic" 
+                      active={selectedProvider === 'Anthropic'} 
+                      onClick={() => setSelectedProvider(selectedProvider === 'Anthropic' ? 'All' : 'Anthropic')}
+                    />
+                    <ProviderLegend 
+                      color="bg-blue-500" 
+                      label="Google" 
+                      active={selectedProvider === 'Google'} 
+                      onClick={() => setSelectedProvider(selectedProvider === 'Google' ? 'All' : 'Google')}
+                    />
+                    <ProviderLegend 
+                      color="bg-zinc-400" 
+                      label="xAI" 
+                      active={selectedProvider === 'xAI'} 
+                      onClick={() => setSelectedProvider(selectedProvider === 'xAI' ? 'All' : 'xAI')}
+                    />
                   </div>
                 </div>
                 
                 <div className="flex items-end gap-1.5 md:gap-2.5 h-[250px] md:h-[320px] border-b border-white/5 pb-1 px-2">
-                  {activeCategory.models.map((model, i) => {
+                  {filteredModels.map((model, i) => {
                     const maxVal = Math.max(...activeCategory.models.map(m => m.score));
                     const percentage = (model.score / maxVal) * 100;
                     return (
                       <div key={model.name} className="flex-1 flex flex-col items-center group relative h-full justify-end cursor-pointer">
-                        <div className="absolute bottom-full mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100 whitespace-nowrap z-20">
+                        <div className="absolute bottom-full mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100 whitespace-nowrap z-20 pointer-events-none">
                           <div className="bg-white text-black px-2.5 py-1.5 rounded-xl shadow-2xl flex flex-col items-center gap-0.5">
                             <span className="text-[8px] font-black uppercase tracking-widest opacity-50">{model.name}</span>
                             <span className="text-xs font-black">{model.score.toLocaleString()}{model.unit || ' Elo'}</span>
@@ -293,11 +477,16 @@ export default function Home() {
                             model.provider === 'Anthropic' ? 'bg-amber-500' :
                             model.provider === 'Google' ? 'bg-blue-500' : 'bg-white'
                           }`} />
-                          <span className="text-[8px] font-black text-zinc-600 group-hover:text-zinc-400 transition-colors">#{i+1}</span>
+                          <span className="text-[8px] font-black text-zinc-600 group-hover:text-zinc-400 transition-colors">#{model.rank}</span>
                         </div>
                       </div>
                     );
                   })}
+                  {filteredModels.length === 0 && (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">Matrix nodes filtered.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -332,12 +521,24 @@ export default function Home() {
   );
 }
 
-function ProviderLegend({ color, label }: { color: string, label: string }) {
+function ProviderLegend({ color, label, active, onClick }: { color: string, label: string, active?: boolean, onClick?: () => void }) {
   return (
-    <div className="flex items-center gap-2">
+    <button 
+      onClick={onClick}
+      className={`flex items-center gap-2 px-2 py-1 rounded-lg transition-all ${active ? 'bg-white/10 ring-1 ring-white/20' : 'hover:bg-white/5 opacity-60 hover:opacity-100'}`}
+    >
       <div className={`h-1.5 w-1.5 rounded-full ${color}`} />
       <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{label}</span>
-    </div>
+    </button>
+  );
+}
+
+function SortIcon({ active, direction }: { active: boolean, direction: 'asc' | 'desc' }) {
+  if (!active) return <div className="w-2 h-2 opacity-0 group-hover:opacity-20 bg-white rounded-full transition-all" />;
+  return (
+    <svg className={`w-2 h-2 text-blue-500 transition-transform ${direction === 'desc' ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 15l7-7 7 7" />
+    </svg>
   );
 }
 
