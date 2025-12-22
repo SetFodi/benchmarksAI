@@ -59,7 +59,7 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
   return [
     {
       id: 'chatbot-text',
-      name: 'Text Arena (Elo)',
+      name: 'Text (Elo)',
       description: 'LMSYS blind human preference leaderboard. The global standard for general intelligence. Verified as of Dec 22, 2025.',
       models: [
         { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 1512, rank: 1 },
@@ -76,7 +76,7 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
     },
     {
       id: 'webdev-arena',
-      name: 'WebDev Arena (UI)',
+      name: 'WebDev (UI)',
       description: 'Industry-standard UI/Web benchmark. Measures production-ready frontend code generation and visual fidelity. Updated Dec 22, 2025.',
       models: [
         { name: 'GPT-5.2-Codex', provider: 'OpenAI', score: 1540, rank: 1 }, // New Dec 22
@@ -93,7 +93,7 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
     },
     {
       id: 'vision-arena',
-      name: 'Vision Arena',
+      name: 'Vision',
       description: 'LMSYS image understanding and reasoning benchmark. Tests visual spatial perception and complex diagram analysis.',
       models: [
         { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 1342, rank: 1 }, // Bumped Dec 22
@@ -110,7 +110,7 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
     },
     {
       id: 'hle-exam',
-      name: "Humanity's Last Exam",
+      name: 'HLE Exam',
       description: "2,500 of the toughest subject-diverse expert questions. Finalized April 2025. Source: scale.com/leaderboard/humanitys_last_exam",
       models: [
         { name: 'Gemini 3 Pro Preview', provider: 'Google', score: 37.52, maxScore: 100, unit: '%', rank: 1 },
@@ -128,7 +128,7 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
     },
     {
       id: 'swe-bench-verified',
-      name: 'SWE-bench Verified',
+      name: 'SWE-bench',
       description: 'Verified resolution of real-world GitHub issues. Source: llm-stats.com/benchmarks/swe-bench-verified. Updated Dec 22, 2025.',
       models: [
         { name: 'GPT-5.2-Codex', provider: 'OpenAI', score: 88.2, maxScore: 100, unit: '%', rank: 1 }, // New Dec 22
@@ -141,6 +141,22 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
         { name: 'GPT-5.1', provider: 'OpenAI', score: 76.3, maxScore: 100, unit: '%', rank: 8 },
         { name: 'Gemini 3 Pro', provider: 'Google', score: 76.2, maxScore: 100, unit: '%', rank: 9 },
         { name: 'GPT-5', provider: 'OpenAI', score: 74.9, maxScore: 100, unit: '%', rank: 10 },
+      ],
+    },
+    {
+      id: 'ivq-benchmark',
+      name: 'IVQ (Value Index)',
+      description: 'The definitive "Worth It" benchmark. Engineered by AndMarks, this index aggregates intelligence from all our benchmarks (Text, WebDev, Vision, HLE, SWE) and LiveBench (ICLR 2025) and weighs it against token pricing. Gemini 3 Flash takes #1 due to its top-tier multimodal and coding utility at an extreme price point.',
+      models: [
+        { name: 'Gemini 3 Flash', provider: 'Google', score: 992, unit: ' IVQ', rank: 1, inputPrice: 0.50, outputPrice: 3.00 },
+        { name: 'DeepSeek-R1', provider: 'OpenAI', score: 978, unit: ' IVQ', rank: 2, inputPrice: 0.28, outputPrice: 0.42 },
+        { name: 'Grok-4.1 Fast', provider: 'xAI', score: 965, unit: ' IVQ', rank: 3, inputPrice: 0.20, outputPrice: 0.50 },
+        { name: 'Gemini 3 Pro', provider: 'Google', score: 948, unit: ' IVQ', rank: 4, inputPrice: 2.00, outputPrice: 12.00 },
+        { name: 'GPT-5.2', provider: 'OpenAI', score: 932, unit: ' IVQ', rank: 5, inputPrice: 1.75, outputPrice: 14.00 },
+        { name: 'Claude 4.5 Sonnet', provider: 'Anthropic', score: 912, unit: ' IVQ', rank: 6, inputPrice: 3.00, outputPrice: 15.00 },
+        { name: 'Claude 4.5 Opus', provider: 'Anthropic', score: 885, unit: ' IVQ', rank: 7, inputPrice: 5.00, outputPrice: 25.00 },
+        { name: 'Grok-4 (Heavy)', provider: 'xAI', score: 842, unit: ' IVQ', rank: 8, inputPrice: 3.00, outputPrice: 15.00 },
+        { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 520, unit: ' IVQ', rank: 9, inputPrice: 21.00, outputPrice: 168.00 },
       ],
     },
   ];

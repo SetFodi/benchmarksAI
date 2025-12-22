@@ -7,6 +7,8 @@ export interface BenchmarkModel {
   rank?: number;
   secondaryScore?: number; // e.g. Speed (tokens/sec)
   tertiaryScore?: number;  // e.g. Price ($/1M tokens)
+  inputPrice?: number;     // $/1M tokens
+  outputPrice?: number;    // $/1M tokens
 }
 
 export interface BenchmarkCategory {
