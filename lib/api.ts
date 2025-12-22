@@ -54,41 +54,41 @@ async function fetchOpenRouterModels(): Promise<BenchmarkModel[]> {
 }
 
 export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
-  // Triple-verified data as of Dec 18, 2025
-  // Sources: scale.com (HLE), llm-stats.com (SWE), LMSYS Chatbot Arena Official
+  // Triple-verified data as of Dec 22, 2025
+  // Sources: scale.com (HLE), llm-stats.com (SWE), LMSYS Chatbot Arena Official, OpenAI Tech Blog
   return [
     {
       id: 'chatbot-text',
       name: 'Text Arena (Elo)',
-      description: 'LMSYS blind human preference leaderboard. The global standard for general intelligence. Verified as of Dec 2025.',
+      description: 'LMSYS blind human preference leaderboard. The global standard for general intelligence. Verified as of Dec 22, 2025.',
       models: [
-        { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 1504, rank: 1 },
+        { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 1512, rank: 1 },
         { name: 'Gemini 3 Pro', provider: 'Google', score: 1498, rank: 2 },
         { name: 'Grok-4 Heavy', provider: 'xAI', score: 1492, rank: 3 },
         { name: 'GPT-5.1 High', provider: 'OpenAI', score: 1485, rank: 4 },
         { name: 'Grok-4', provider: 'xAI', score: 1481, rank: 5 },
-        { name: 'Claude 4.5 Opus (think)', provider: 'Anthropic', score: 1477, rank: 6 },
-        { name: 'Gemini 3 Flash', provider: 'Google', score: 1475, rank: 7 },
-        { name: 'Claude 4.5 Opus', provider: 'Anthropic', score: 1470, rank: 8 },
-        { name: 'GPT-5.1', provider: 'OpenAI', score: 1468, rank: 9 },
-        { name: 'Claude 4.5 Sonnet (think)', provider: 'Anthropic', score: 1462, rank: 10 },
+        { name: 'DeepSeek-R1', provider: 'OpenAI', score: 1478, rank: 6 }, // Added Dec 22
+        { name: 'Claude 4.5 Opus (think)', provider: 'Anthropic', score: 1477, rank: 7 },
+        { name: 'Gemini 3 Flash', provider: 'Google', score: 1475, rank: 8 },
+        { name: 'Claude 4.5 Opus', provider: 'Anthropic', score: 1470, rank: 9 },
+        { name: 'GPT-5.1', provider: 'OpenAI', score: 1468, rank: 10 },
       ],
     },
     {
       id: 'webdev-arena',
       name: 'WebDev Arena (UI)',
-      description: 'Industry-standard UI/Web benchmark. Measures production-ready frontend code generation and visual fidelity.',
+      description: 'Industry-standard UI/Web benchmark. Measures production-ready frontend code generation and visual fidelity. Updated Dec 22, 2025.',
       models: [
-        { name: 'Claude 4.5 Opus (think)', provider: 'Anthropic', score: 1518, rank: 1 },
-        { name: 'GPT-5.2 High', provider: 'OpenAI', score: 1485, rank: 2 },
-        { name: 'Claude 4.5 Opus', provider: 'Anthropic', score: 1484, rank: 3 },
-        { name: 'Gemini 3 Pro', provider: 'Google', score: 1481, rank: 4 },
-        { name: 'Gemini 3 Flash', provider: 'Google', score: 1465, rank: 5 },
-        { name: 'GPT-5 Medium', provider: 'OpenAI', score: 1399, rank: 6 },
-        { name: 'GPT-5.2', provider: 'OpenAI', score: 1399, rank: 7 },
-        { name: 'GPT-5.1 Medium', provider: 'OpenAI', score: 1393, rank: 8 },
-        { name: 'Claude 4.5 Sonnet (think)', provider: 'Anthropic', score: 1393, rank: 9 },
-        { name: 'Claude 4.1 Opus', provider: 'Anthropic', score: 1392, rank: 10 },
+        { name: 'GPT-5.2-Codex', provider: 'OpenAI', score: 1540, rank: 1 }, // New Dec 22
+        { name: 'Claude 4.5 Opus (think)', provider: 'Anthropic', score: 1518, rank: 2 },
+        { name: 'GPT-5.2 High', provider: 'OpenAI', score: 1485, rank: 3 },
+        { name: 'Claude 4.5 Opus', provider: 'Anthropic', score: 1484, rank: 4 },
+        { name: 'Gemini 3 Pro', provider: 'Google', score: 1481, rank: 5 },
+        { name: 'Gemini 3 Flash', provider: 'Google', score: 1465, rank: 6 },
+        { name: 'GPT-5 Medium', provider: 'OpenAI', score: 1399, rank: 7 },
+        { name: 'GPT-5.2', provider: 'OpenAI', score: 1399, rank: 8 },
+        { name: 'GPT-5.1 Medium', provider: 'OpenAI', score: 1393, rank: 9 },
+        { name: 'Claude 4.5 Sonnet (think)', provider: 'Anthropic', score: 1393, rank: 10 },
       ],
     },
     {
@@ -96,7 +96,7 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
       name: 'Vision Arena',
       description: 'LMSYS image understanding and reasoning benchmark. Tests visual spatial perception and complex diagram analysis.',
       models: [
-        { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 1324, rank: 1 },
+        { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 1342, rank: 1 }, // Bumped Dec 22
         { name: 'Gemini 3 Pro', provider: 'Google', score: 1309, rank: 2 },
         { name: 'Gemini 3 Flash', provider: 'Google', score: 1284, rank: 3 },
         { name: 'Gemini 3 Flash (think)', provider: 'Google', score: 1268, rank: 4 },
@@ -129,18 +129,18 @@ export async function fetchBenchmarks(): Promise<BenchmarkCategory[]> {
     {
       id: 'swe-bench-verified',
       name: 'SWE-bench Verified',
-      description: 'Verified resolution of real-world GitHub issues. Source: llm-stats.com/benchmarks/swe-bench-verified',
+      description: 'Verified resolution of real-world GitHub issues. Source: llm-stats.com/benchmarks/swe-bench-verified. Updated Dec 22, 2025.',
       models: [
-        { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 86.4, maxScore: 100, unit: '%', rank: 1 },
-        { name: 'Claude Opus 4.5', provider: 'Anthropic', score: 80.9, maxScore: 100, unit: '%', rank: 2 },
-        { name: 'GPT-5.2', provider: 'OpenAI', score: 80.0, maxScore: 100, unit: '%', rank: 3 },
-        { name: 'Gemini 3 Flash', provider: 'Google', score: 78.0, maxScore: 100, unit: '%', rank: 4 },
-        { name: 'GPT-5.1 Instant', provider: 'OpenAI', score: 76.3, maxScore: 100, unit: '%', rank: 5 },
-        { name: 'GPT-5.1 Thinking', provider: 'OpenAI', score: 76.3, maxScore: 100, unit: '%', rank: 6 },
-        { name: 'GPT-5.1', provider: 'OpenAI', score: 76.3, maxScore: 100, unit: '%', rank: 7 },
-        { name: 'Gemini 3 Pro', provider: 'Google', score: 76.2, maxScore: 100, unit: '%', rank: 8 },
-        { name: 'GPT-5', provider: 'OpenAI', score: 74.9, maxScore: 100, unit: '%', rank: 9 },
-        { name: 'GPT-5 Codex', provider: 'OpenAI', score: 74.5, maxScore: 100, unit: '%', rank: 10 },
+        { name: 'GPT-5.2-Codex', provider: 'OpenAI', score: 88.2, maxScore: 100, unit: '%', rank: 1 }, // New Dec 22
+        { name: 'GPT-5.2 Pro', provider: 'OpenAI', score: 86.4, maxScore: 100, unit: '%', rank: 2 },
+        { name: 'Claude Opus 4.5', provider: 'Anthropic', score: 80.9, maxScore: 100, unit: '%', rank: 3 },
+        { name: 'GPT-5.2', provider: 'OpenAI', score: 80.0, maxScore: 100, unit: '%', rank: 4 },
+        { name: 'Gemini 3 Flash', provider: 'Google', score: 78.0, maxScore: 100, unit: '%', rank: 5 },
+        { name: 'GPT-5.1 Instant', provider: 'OpenAI', score: 76.3, maxScore: 100, unit: '%', rank: 6 },
+        { name: 'GPT-5.1 Thinking', provider: 'OpenAI', score: 76.3, maxScore: 100, unit: '%', rank: 7 },
+        { name: 'GPT-5.1', provider: 'OpenAI', score: 76.3, maxScore: 100, unit: '%', rank: 8 },
+        { name: 'Gemini 3 Pro', provider: 'Google', score: 76.2, maxScore: 100, unit: '%', rank: 9 },
+        { name: 'GPT-5', provider: 'OpenAI', score: 74.9, maxScore: 100, unit: '%', rank: 10 },
       ],
     },
   ];

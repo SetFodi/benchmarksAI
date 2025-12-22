@@ -105,11 +105,11 @@ export default function Home() {
               <div className="flex flex-col items-end">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
                   <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Sync Protocol 4.5</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Sync Protocol 4.6</span>
                 </div>
                 <div className="mt-1.5 flex flex-col items-end gap-0.5">
                   <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest leading-none">
-                    Last Update: Dec 18, 2025
+                    Last Update: Dec 22, 2025
                   </p>
                   <p className="text-[8px] font-bold text-blue-500/50 uppercase tracking-widest leading-none">
                     Verification: High Trust
@@ -127,13 +127,13 @@ export default function Home() {
             <div className="flex items-center gap-2 mb-1">
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500/80">Station Timeline</span>
               <span className="h-px w-4 bg-white/10" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 italic">Dec 18, 2025</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 italic">Dec 22, 2025</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-black tracking-tighter max-w-3xl leading-none text-white">
               THE EVOLUTION OF <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 uppercase">INTELLIGENCE</span>.
             </h2>
             <p className="text-base text-zinc-400 max-w-xl font-medium">
-              Real-time, verified benchmarks for frontier models as of Dec 18, 2025.
+              Real-time, verified benchmarks for frontier models as of Dec 22, 2025.
             </p>
           </div>
           
@@ -191,7 +191,7 @@ export default function Home() {
               </div>
               <div>
                 <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-0.5">Sync</p>
-                <p className="text-xl font-black tabular-nums text-white tracking-tighter">V4.5</p>
+                <p className="text-xl font-black tabular-nums text-white tracking-tighter">V4.6</p>
               </div>
             </div>
           </div>
